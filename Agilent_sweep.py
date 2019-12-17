@@ -57,20 +57,18 @@ log_data_command = 'sens1:func:par:logg ' + str(points) + ',' + str(avg_time)
 Agilent_8164A.write(log_data_command); # Sets the number of data points and the averaging time for the logging data acquisition function
 Agilent_8164A.write('sens1:func:stat stab,star'); #Enables Stability data acquistion and starts data acquistion
 Agilent_8164A.write('wav:swe STAR'); # Start wavelength sweep
-#c=0;
-#while int(Agilent_8164A.query('wav:swe?')) == 1:
-#    c=c+1
+
 Agilent_8164A.write('sour0:wav:swe:llog 1'); #Logging the wavelength during the sweep
-time.sleep(20);
-values = Agilent_8164A.query_binary_values('sour0:read:data? llog', datatype='d', is_big_endian=True)# get wavelength data from logging operation
+time.sleep(10);
+#values = Agilent_8164A.query_binary_values('sour0:read:data? llog', datatype='d', is_big_endian=True)# get wavelength data from logging operation
 power = Agilent_8164A.query_binary_values('sens1:func:res?'); #get power data
 P = savgol_filter(power,11,3) # Smooths data
 Agilent_8164A.write('sens1:pow:rang:auto 1') #set auto ranging on
 Agilent_8164A.write('TRIG1:INP IGN'); # PD will finish a function when input trigger is abled
 Agilent_8164A.write('sour0:wav 1550nm'); # set the input wavelength back to 1550 nm for the next measurment
 data = [values, P]
-#x =  'Sweep '
-#timing = datetime.now()
-#y = timing.strftime("%d-%m-%Y %H--%M--%S")
-#z = '.csv'
-#pd.DataFrame(data).to_csv(x+y+z , header = ['Voltage (V)','Current (A)'], index = None)
+x =  'Sweep '
+timing = datetime.now()
+y = timing.strftime("%d-%m-%Y %H--%M--%S")
+z = '.csv'
+pd.DataFrame(data).to_csv(x+y+z , header = ['Voltage (V)','Current (A)'], index = None)
