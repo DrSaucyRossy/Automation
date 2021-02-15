@@ -60,7 +60,7 @@ Agilent_8164A.write('wav:swe STAR'); # Start wavelength sweep
 
 Agilent_8164A.write('sour0:wav:swe:llog 1'); #Logging the wavelength during the sweep
 time.sleep(10);
-#values = Agilent_8164A.query_binary_values('sour0:read:data? llog', datatype='d', is_big_endian=True)# get wavelength data from logging operation
+values = Agilent_8164A.query_binary_values('sour0:read:data? llog', datatype='d', is_big_endian=True)# get wavelength data from logging operation
 power = Agilent_8164A.query_binary_values('sens1:func:res?'); #get power data
 P = savgol_filter(power,11,3) # Smooths data
 Agilent_8164A.write('sens1:pow:rang:auto 1') #set auto ranging on
@@ -71,4 +71,4 @@ x =  'Sweep '
 timing = datetime.now()
 y = timing.strftime("%d-%m-%Y %H--%M--%S")
 z = '.csv'
-pd.DataFrame(data).to_csv(x+y+z , header = ['Voltage (V)','Current (A)'], index = None)
+pd.DataFrame(data).to_csv(x+y+z , header = ['Wavelength (m)','Power (dBm)'], index = None)
